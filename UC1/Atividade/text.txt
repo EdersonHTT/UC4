@@ -1,0 +1,29 @@
+Requisitos Funciomais:
+
+-RF1. O sistema deve permitir o cadastro de professores e de matriculas de alunos pela parte da gestao escolar;
+
+-RF2. O sistema deve permitir os professores dar notas aos alunos;
+
+-RF3. O sistema deve permitir os professores de comseguirem dar falta para os alunos;
+
+-RF4. O sistema deve permitir a parte da gestao escolar de gerenciar as matriculas(Cancelar e etc);
+
+-RF5. O sistema deve permitir que os alunos possam acessar sua notas;
+
+-RF6. O sistema deve permitir que os alunos possam acessar sua frequencia;
+
+-RF7. O sistema deve alertar os alunos se sua frequenquencia estar abaixo da media escolar.
+
+Requisitos Não Funciomais:
+
+-RNF1. O sistema deve restringir o acesso às matriculas para que cuida da gestão escolas.
+
+-RNF2. O sistema deve garantir que em caso de erro de formulário o sistema salve o progresso de dar notas.
+
+-RNF3. O sistema deve ser intuitivo e rapido para poder dar faltas aos alunos.
+
+-RNF4. O sistema deve ser uma aplicação para dispositivos moveis(aplicativo) e desktop
+
+-RNF5. O gerenciamento das matriculas deve ser por desktop.
+
+Regras de Negócio do Sistema de Biblioteca:
