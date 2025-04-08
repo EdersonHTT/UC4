@@ -7,7 +7,7 @@
 - Entrar no carro
 - Ir para Escola
 ---
-## Chegar em casa
+## Ir da escola para casa
 - Estudar na escola
 - Fazer provas
 - esperar passar o tempo
