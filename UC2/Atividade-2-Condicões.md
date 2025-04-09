@@ -2,7 +2,7 @@
 ---
 ## O carro sem gasolina para ir a escola
 - Deço do carro
-- Vou a parada de ônibus
+- Vou à parada de ônibus
 - Espero o ônibus para o meu destino
 - Pego o ônibus e vou para a escola
 ---
