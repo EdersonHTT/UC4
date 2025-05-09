@@ -1,9 +1,9 @@
 let ask = require("readline-sync")
 
 function chose(menu, code, amount){
-    for(let iten of menu){
-        if(iten[1] == code){
-            return `Oder: ${iten[0].toUpperCase()}\nAmount: ${amount}\nPrice: ${(iten[2] * amount).toFixed(2)}`
+    for(let item of menu){
+        if(item[1] == code){
+            return `Oder: ${item[0].toUpperCase()}\nAmount: ${amount}\nPrice: ${(item[2] * amount).toFixed(2)}`
         }
     };
 }

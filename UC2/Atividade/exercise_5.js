@@ -1,6 +1,6 @@
 let ask = require("readline-sync")
 
-function salaryIncrease(salary, position){
+function salaryIncrease(position, salary){
     let newSalary
 
     console.clear()
@@ -27,5 +27,5 @@ function salaryIncrease(salary, position){
 console.clear()
 console.log("Manager => +10%\nTechnical => +20%\nEngineer => +30%\nOther  => +40%\n")
 
-console.log(salaryIncrease(Number(ask.question("Your salary: ")), ask.question("Your position: ")))
+console.log(salaryIncrease(ask.question("Your position: "), Number(ask.question("Your salary: "))))
 
