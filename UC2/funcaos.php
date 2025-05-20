@@ -246,47 +246,92 @@ $continuar = true;
 
 // Musicas
 
-popen("cls", "w");
+// popen("cls", "w");
 
-$musicas = ["晩餐歌 (Bansanka)", "愛の賞味期限 (Ai no Shōmi Kigen)", "M-30", "Quiero Que Vuelvas", "Con ser tú (Acústico)"];
-$trocando = true;
-$index = 0;
+// $musicas = ["晩餐歌 (Bansanka)", "愛の賞味期限 (Ai no Shōmi Kigen)", "M-30", "Quiero Que Vuelvas", "Con ser tú (Acústico)"];
+// $trocando = true;
+// $index = 0;
 
-while($trocando){
-    popen("cls", "w");
+// function trocar(&$musicas, &$index){
 
-    echo "Tocando: " . $musicas[$index];
-    echo "\n\n[1] - Trocar\n[2] - Voltar\n[3] - Sair\n\n";
-    $resposta = readline("Escolha: ");
+//     if($index < count($musicas)-1){
 
-    if($resposta === "1"){
+//         $index++;
+//     } else {
 
-        if($index < count($musicas)-1){
+//         $index = 0;
+//     }
 
-            $index++;
-        } else {
+// }
 
-            $index = 0;
-        }
-    } else if($resposta === "2"){
+// function voltarMu(&$musicas, &$index){
 
-        if($index > 0){
+//     if($index > 0){
 
-            $index--;
-        } else {
+//         $index--;
+//     } else {
 
-            $index = count($musicas)-1;
-        }
-    } else if($resposta === "3"){
+//         $index = count($musicas)-1;
+//     }
+
+// }
+
+// while($trocando){
+//     popen("cls", "w");
+
+//     echo "Tocando: " . $musicas[$index];
+//     echo "\n\n[1] - Trocar\n[2] - Voltar\n[3] - Sair\n\n";
+//     $resposta = readline("Escolha: ");
+
+//     if($resposta === "1"){
+
+//         trocar($musicas, $index);
+
+//     } else if($resposta === "2"){
+
+//         voltarMu($musicas, $index);
         
-        $trocando = false;
-        popen("cls", "w");
+//     } else if($resposta === "3"){
+        
+//         $trocando = false;
+//         popen("cls", "w");
 
-    } else {
+//     } else {
 
-        popen("cls", "w");
-        echo "Valor invalido!";
-        sleep(2);
+//         popen("cls", "w");
+//         echo "Valor invalido!";
+//         sleep(2);
 
+//     }
+// }
+
+// itere
+
+
+$numeros = [1, 2, 3, 4, 5, 6, 20];
+
+$func = function ($x){
+
+    echo $x + 1 . "\n";
+
+};
+
+$h = function ($x){
+
+    echo $x**2 . "\n";
+
+};
+
+$funcoes = [$func, $h];
+$contar = 0;
+
+for($i = 0; $i <= count($numeros); $i++){
+
+    if($i < count($numeros)){
+        $funcoes[$contar]($numeros[$i]);
+    } else if($contar < 1){
+        $contar++;
+        $i = -1;
     }
+
 }
