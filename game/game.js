@@ -1,5 +1,3 @@
-let ask = require("readline-sync")
-
 process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
