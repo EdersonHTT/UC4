@@ -1,0 +1,3 @@
+- bola = branco
+- imagem = recebe uma lista que guarda colunas de pixeis em listas
+- intere sobre todas as colunas da imagem e para cada coluna, intere sobre todos os itens e compare se a cor é igual a cor da bola.
