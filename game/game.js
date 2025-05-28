@@ -2,6 +2,52 @@ process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
+function menuOpen(menu, key){
+
+    if(key === "\u000D"){
+
+        if(choice === 0){
+
+
+        } else if(choice === 1){
+
+            
+        } else if(choice === 2){
+
+            
+        } else if(choice === menu.length-1){
+
+            console.clear()
+            process.exit()
+        }
+    } else if(key === "w" && choice > 0 && choice <= menu.length-1){
+
+        choice -= 1
+
+        menu[choice+1] = previous
+        previous = menu[choice]
+        menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
+    } else if(key === "s" && choice < menu.length-1  && choice >= 0){
+
+        choice += 1
+
+        menu[choice-1] = previous
+        previous = menu[choice]
+        menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
+    }
+
+    console.clear()
+    console.log(`______________________________
+|                            |    
+|                            |
+|                            |
+|       ${menu.join("        |\n|       ")}        |
+|                            |
+|                            |
+|                            |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+}
+
 function seeMap(map){
 
     let copy = [[], [], [], [], [], [], [], [], [], []]
@@ -28,7 +74,7 @@ function seeMap(map){
     }
 }
 
-function move(map, direction, forms, player, itens){
+function move(map, direction, forms, player, items){
     let horizontal = 0
     let vertical = 0
 
@@ -64,12 +110,12 @@ function move(map, direction, forms, player, itens){
                     
                     if(map.indexOf(map[i]) === 0, map[i].indexOf(map[i][k]) === 9){
 
-                        player.inventory.push(itens[0])
+                        player.inventory.push(items[0])
                         map[(i+vertical)][(k+horizontal)] = map[i][k]
                         map[i][k] = " "
                     } else if(map.indexOf(map[i]) === 3, map[i].indexOf(map[i][k]) === 4){
 
-                        player.inventory.push({...itens[1]})
+                        player.inventory.push({...items[1]})
                         
                         for(let v = 0; v < player.inventory.length; v++){
 
@@ -91,23 +137,40 @@ function move(map, direction, forms, player, itens){
     }
 }
 
+function toMap(key) {
+
+    move(map, key, [tree, monster, formP, item], player, items)
+    console.clear()
+    seeMap(map)
+}
+
 function start(){    
 
     console.clear()
     seeMap(map)
-    process.stdin.on('data', (tecla) => {
-        
-        if(tecla != "\u001B"){
-            
-            move(map, tecla, [tree, monster, formP, item], player, itens)
-            console.clear()
-            seeMap(map)
-            console.log(player.inventory)
-        } else {
 
-            process.exit()
-        }
+    process.stdin.on('data', (key) => {
+
+        if(key === "\u001B" && escCount === 0){
+                    
+            browsing = "menu"
+            escCount += 1
+        } else if(key === "\u001B" && escCount === 1){
+
+            escCount -= 1
+            browsing = "toMap"
+        }  
             
+        switch(browsing){
+            case "toMap":
+
+                toMap(key)
+            break
+            case "menu":
+
+                menuOpen(menu, key, browsing)
+            break
+        }
     })
 }
 
@@ -131,18 +194,18 @@ let map = [
 
 let player = {
 
-    nome: "",
+    name: "",
     hp: 100,
     damage: 5,
     inventory: []
 }
 
-let itens = [
+let items = [
 
     {
 
-        arma: "sword",
-        dano: 10
+        weapon: "sword",
+        damage: 10
     },
 
     {
@@ -184,5 +247,13 @@ let itens = [
         hp: 5,
     }
 ]
+
+
+let menu = ["\x1b[30;47m[  Status   ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[   Leave   ]", ]
+let choice = 0 
+let previous = "[  Status   ]"
+
+let escCount = 0
+let browsing = "toMap"
 
 start()
