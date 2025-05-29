@@ -30,6 +30,8 @@ function inventory(key, player, itemNames, choiceUse, previous) {
             if (key === "\u000D") {
 
                 itemSelected = true
+                toAction = 0
+                key = " "
             } else if (key === "w" && choiceItems > 0 && choiceItems <= seeItens.length - 1 && seeItens.length != 1) {
 
                 choiceItems -= 1
@@ -121,8 +123,7 @@ function menuOpen(menu, key) {
         } else if (choice === 1) {
 
             browsing = "inventory"
-            key = " "
-            start(key)
+            keyPress = " "
         } else if (choice === 2) {
 
         } else if (choice === menu.length - 1) {
@@ -257,25 +258,27 @@ function start(key) {
 
         browsing = "menu"
         escCount += 1
+        itemSelected = false
+        enterPress = false
     } else if (key === "\u001B" && escCount === 1) {
 
         escCount -= 1
         browsing = "toMap"
+        itemSelected = false
+        enterPress = false
     }
 
-    switch (browsing) {
-        case "toMap":
+    if(browsing === "toMap"){
 
-            toMap(key)
-            break
-        case "menu":
+        toMap(key)
+    }
+    if(browsing === "menu"){
 
-            menuOpen(menu, key)
-            break
-        case "inventory":
+        menuOpen(menu, key)
+    }
+    if(browsing === "inventory"){
 
-            inventory(key, player, itemNames, choiceUse, previousItems, seeItens)
-            break
+        inventory(key, player, itemNames, choiceUse, previousItems, seeItens)
     }
 }
 
@@ -331,13 +334,18 @@ let seeItens = []
 let choiceItems = 0
 let choiceLinear = 0
 let choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
-let itemSelected = false
 let previousItems = ["[    Use    ]", "[    Leave    ]"]
+let itemSelected = false
 let enterPress = false
 
 let escCount = 0
 let browsing = "toMap"
+let keyPress
 
 console.clear()
 seeMap(map)
-process.stdin.on('data', (key) => start(key) )
+
+process.stdin.on('data', (key) => {
+    keyPress = key
+    start(keyPress)
+})
