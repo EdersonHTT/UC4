@@ -2,8 +2,304 @@ process.stdin.setRawMode(true)
 process.stdin.resume()
 process.stdin.setEncoding('utf8')
 
-function inventory(key, player, itemNames, choiceUse, previous) {
+function seeStatus(player){
+
+    statusPlayer = [
+        `hp: ${player.hp}`,
+        `damage: ${player.damage}`,
+    ]
+
+    let textName = player.name + " Status:"
+
+    console.clear()
+    console.log("  ______________________________")
+    console.log("  |                            |")
+        
+    for(let s = 0; textName.length < 26;  s++){
+
+        textName += " "
+    }
+
+    console.log("  |  "+ textName +"|")
+    console.log("  |                            |")
+
+    for(let i = 0; i < statusPlayer.length; i++){
+        let spaceNu = 20
+        let spaces = ""
+        let fullText
+
+        let valor = spaceNu - statusPlayer[i].length
+        valor = Math.floor(valor / 2)
+
+        for(let v = 0; v < valor; v++){
+
+            spaces += " "
+        }
+
+        fullText = statusPlayer[i] + spaces
+
+        if(fullText.length < 19){
+
+            for(let s = 0; fullText.length < 19;  s++){
+
+                fullText += " "
+            }
+        }
+
+        fullText += "|"
+
+        console.log("  |         " + fullText)
+    }
+
+    console.log("  |                            |")
+    console.log("  |                            |")
+    console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
+}
+
+function use(itemNu) {
+
+    if(player.inventory[itemNu].nome === "life potion"){
+
+        if(player.hp < player.hpMax){
+            player.hp += player.inventory[itemNu].heal
+            player.inventory[itemNu].amount -= 1
+                
+            if(player.inventory[itemNu].amount <= 0){
+
+                player.inventory.splice(itemNu, 1)
+            } 
+        }
+        
+    } else {
+
+        for(let i = 0; i < player.equipment.length; i++){
+
+            if(player.inventory[itemNu].type === slots[i]){
+
+                if(!player.equipment.includes(player.inventory[itemNu])){
+
+                    for(let b = 0; b < buffs.length; b++){
+
+                        if(player.inventory[itemNu][buffs[b]]){
+
+                            if(player.inventory[itemNu][buffs[b]] === "hp"){
+
+                                player["hpMax"] += player.inventory[itemNu][buffs[b]]
+                            }
+                            player[buffs[b]] += player.inventory[itemNu][buffs[b]]
+                        }
+                    }
+
+                    player.equipment[i] = player.inventory[itemNu]
+                    player.inventory.splice(itemNu, 1)
+                } else {
+
+                    for(let b = 0; b < buffs.length; b++){
+
+                        if(player.inventory[itemNu][buffs[b]]){
+
+                            if(player.inventory[itemNu][buffs[b]] === "hp"){
+
+                                player["hpMax"] += player.inventory[itemNu][buffs[b]]
+                            }
+
+                            player[buffs[b]] += player.inventory[itemNu][buffs[b]]
+                        }
+
+                        if(player.equipment[i][buffs[b]]){
+
+                            if(player.inventory[itemNu][buffs[b]] === "hp"){
+
+                                player["hpMax"] -= player.equipment[i][buffs[b]]
+                            }
+
+                            player[buffs[b]] -= player.equipment[i][buffs[b]]
+                        }
+                    }
+                    
+                    player.inventory.push(player.equipment[i])
+                    player.equipment[i] = player.inventory[itemNu]
+                    player.inventory.splice(itemNu, 1)
+                }
+            }
+        }
+    }
+
+    inventory(player, choiceUse, previous)
+}
+
+function seeEquipment(player, equpedNames, choiceUnUse, previous) {
     
+    for (let i = 0; i < player.equipment.length; i++) {
+
+        if(player.equipment[i].name) {
+
+            if(!equpedNames.includes(player.equipment[i].name)){
+
+                if(equpedNames.length === 0){
+
+                    seeEquped.push("-> "+player.equipment[i].name) 
+                    equpedNames.push(player.equipment[i].name)    
+                } else {
+
+                    seeEquped.push("   "+player.equipment[i].name) 
+                    equpedNames.push(player.equipment[i].name)
+                }
+            }
+
+        }
+    }
+
+    if(equpedNames.length > 0){
+        if(!itemSelected){
+
+            if (keyPress === "\u000D") {
+
+                itemSelected = true
+                keyPress = " "
+            } else if (keyPress === "w" && choiceEquip > 0 && choiceEquip <= seeEquped.length - 1 && seeEquped.length != 1) {
+
+                choiceEquip -= 1
+
+                seeEquped[choiceEquip + 1] = "   "+equpedNames[choiceEquip + 1]
+                seeEquped[choiceEquip] = `-> ${equpedNames[choiceEquip]}`
+            } else if (keyPress === "s" && choiceEquip < seeEquped.length - 1 && choiceEquip >= 0 && seeEquped.length != 1) {
+
+                choiceEquip += 1
+
+                seeEquped[choiceEquip - 1] = "   "+equpedNames[choiceEquip - 1]
+                seeEquped[choiceEquip] = `-> ${equpedNames[choiceEquip]}`
+            }
+
+                console.clear()
+
+                console.log("  ______________________________")
+                console.log("  |                            |")
+                console.log("  |                            |")
+                
+                
+                for(let i = 0; i < seeEquped.length; i++){
+                    let spaces = ""
+                    let fullText
+
+                    let valor = 23 - seeEquped[i].length
+                    valor = Math.floor(valor / 2)
+
+                    for(let v = 0; v < valor; v++){
+
+                        spaces += " "
+                    }
+
+                    fullText = seeEquped[i] + spaces
+
+                    if(fullText.length < 22){
+
+                        for(let s = 0; fullText.length < 22;  s++){
+
+                            fullText += " "
+                        }
+                    }
+
+                    fullText += "|"
+
+                    console.log("  |      " + fullText)
+                }
+
+                console.log("  |                            |")
+                console.log("  |                            |")
+                console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        } 
+        
+        if(itemSelected){
+
+            if (keyPress === "a" && linearUnUse > 0 && linearUnUse <= choiceUnUse.length - 1) {
+
+                linearUnUse -= 1
+
+                choiceUnUse[linearUnUse + 1] = previous[linearUnUse + 1]
+                choiceUnUse[linearUnUse] = `\x1b[30;47m${choiceUnUse[linearUnUse]}\x1b[0m`
+            } else if (keyPress === "d" && linearUnUse < choiceUnUse.length - 1 && linearUnUse >= 0) {
+
+                linearUnUse += 1
+
+                choiceUnUse[linearUnUse - 1] = previous[linearUnUse - 1]
+                choiceUnUse[linearUnUse] = `\x1b[30;47m${choiceUnUse[linearUnUse]}\x1b[0m`
+            }
+
+            if(keyPress === "\u000D"){
+
+                if(linearUnUse === 0){
+
+                    //desEquip(choiceEquip)
+                } else {
+
+                    itemSelected = false
+                    keyPress = " "
+                    seeEquipment(player, equpedNames, choiceUnUse, previous)
+                    return
+                }
+            }
+
+            console.clear()
+            console.log("  ______________________________")
+            console.log("  |                            |")
+            console.log("  |                            |")
+                
+                
+            for(let i = 0; i < seeEquped.length; i++){
+                let spaces = ""
+                let fullText
+
+                let valor = 23 - seeEquped[i].length
+                valor = Math.floor(valor / 2)
+
+                for(let v = 0; v < valor; v++){
+
+                    spaces += " "
+                }
+
+                fullText = seeEquped[i] + spaces
+
+                if(fullText.length < 22){
+
+                    for(let s = 0; fullText.length < 22;  s++){
+
+                        fullText += " "
+                    }
+                }
+
+                fullText += "|"
+
+                console.log("  |      " + fullText)
+            }
+
+            console.log("  |                            |")
+            console.log("  |                            |")
+            console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
+            console.log(`__________________________________
+|                                |
+| ${choiceUnUse.join("")} |
+|                                |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+        }
+    } else {
+        
+        console.clear()
+        console.log(`  ______________________________
+  |                            |    
+  |                            |
+  |                            |
+  |     There are no items     |
+  |          equipped          |
+  |                            |
+  |                            |
+  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+    }
+}
+
+function inventory(player, choiceUse, previous) {
     
     for (let i = 0; i < player.inventory.length; i++) {
 
@@ -21,24 +317,21 @@ function inventory(key, player, itemNames, choiceUse, previous) {
         }
     }
 
-    
-
     if(itemNames.length > 0){
         
         if(!itemSelected){
 
-            if (key === "\u000D") {
+            if (keyPress === "\u000D") {
 
                 itemSelected = true
-                toAction = 0
-                key = " "
-            } else if (key === "w" && choiceItems > 0 && choiceItems <= seeItens.length - 1 && seeItens.length != 1) {
+                keyPress = " "
+            } else if (keyPress === "w" && choiceItems > 0 && choiceItems <= seeItens.length - 1 && seeItens.length != 1) {
 
                 choiceItems -= 1
 
                 seeItens[choiceItems + 1] = "   "+player.inventory[choiceItems + 1].name
                 seeItens[choiceItems] = `-> ${itemNames[choiceItems]}`
-            } else if (key === "s" && choiceItems < seeItens.length - 1 && choiceItems >= 0 && seeItens.length != 1) {
+            } else if (keyPress === "s" && choiceItems < seeItens.length - 1 && choiceItems >= 0 && seeItens.length != 1) {
 
                 choiceItems += 1
 
@@ -46,25 +339,54 @@ function inventory(key, player, itemNames, choiceUse, previous) {
                 seeItens[choiceItems] = `-> ${itemNames[choiceItems]}`
             }
 
-                    console.clear()
-                    console.log(`    ______________________________
-    |                            |    
-    |                            |
-    |                            |
-    |      ${seeItens.join("        |\n   |       ")}        |
-    |                            |
-    |                            |
-    |                            |
-    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
-        } else {
+                console.clear()
 
-            if (key === "a" && choiceLinear > 0 && choiceLinear <= choiceUse.length - 1) {
+                console.log("  ______________________________")
+                console.log("  |                            |")
+                console.log("  |                            |")
+                
+                
+                for(let i = 0; i < seeItens.length; i++){
+                    let spaces = ""
+                    let fullText
+
+                    let valor = 23 - seeItens[i].length
+                    valor = Math.floor(valor / 2)
+
+                    for(let v = 0; v < valor; v++){
+
+                        spaces += " "
+                    }
+
+                    fullText = seeItens[i] + spaces
+
+                    if(fullText.length < 22){
+
+                        for(let s = 0; fullText.length < 22;  s++){
+
+                            fullText += " "
+                        }
+                    }
+
+                    fullText += "|"
+
+                    console.log("  |      " + fullText)
+                }
+
+                console.log("  |                            |")
+                console.log("  |                            |")
+                console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        } 
+        
+        if(itemSelected){
+
+            if (keyPress === "a" && choiceLinear > 0 && choiceLinear <= choiceUse.length - 1) {
 
                 choiceLinear -= 1
 
                 choiceUse[choiceLinear + 1] = previous[choiceLinear + 1]
                 choiceUse[choiceLinear] = `\x1b[30;47m${choiceUse[choiceLinear]}\x1b[0m`
-            } else if (key === "d" && choiceLinear < choiceUse.length - 1 && choiceLinear >= 0) {
+            } else if (keyPress === "d" && choiceLinear < choiceUse.length - 1 && choiceLinear >= 0) {
 
                 choiceLinear += 1
 
@@ -72,45 +394,80 @@ function inventory(key, player, itemNames, choiceUse, previous) {
                 choiceUse[choiceLinear] = `\x1b[30;47m${choiceUse[choiceLinear]}\x1b[0m`
             }
 
-            if(key === "\u000D" && enterPress){
+            if(keyPress === "\u000D"){
 
                 if(choiceLinear === 0){
 
-                    // equip()
+                    itemSelected = false
+                    keyPress = " "
+                    itemNames = []
+                    seeItens = []
+                    use(choiceItems)
+                    return
                 } else {
 
                     itemSelected = false
-                    enterPress = false
+                    keyPress = " "
+                    inventory(player, choiceUse, previous)
+                    return
                 }
             }
 
             console.clear()
-            console.log(`  ______________________________
-  |                            |
-  |                            |
-  |       ${seeItens.join("        |\n|       ")}        |
-  |                            |
-  |                            |
-  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-__________________________________
+            console.log("  ______________________________")
+            console.log("  |                            |")
+            console.log("  |                            |")
+                
+                
+            for(let i = 0; i < seeItens.length; i++){
+                let spaces = ""
+                let fullText
+
+                let valor = 23 - seeItens[i].length
+                valor = Math.floor(valor / 2)
+
+                for(let v = 0; v < valor; v++){
+
+                    spaces += " "
+                }
+
+                fullText = seeItens[i] + spaces
+
+                if(fullText.length < 22){
+
+                    for(let s = 0; fullText.length < 22;  s++){
+
+                        fullText += " "
+                    }
+                }
+
+                fullText += "|"
+
+                console.log("  |      " + fullText)
+            }
+
+            console.log("  |                            |")
+            console.log("  |                            |")
+            console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
+            console.log(`__________________________________
 |                                |
 | ${choiceUse.join("  ")} |
 |                                |
 ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
-            enterPress = true
         }
     } else {
 
         console.clear()
-        console.log(`______________________________
-|                            |    
-|                            |
-|                            |
-|     There are no items     |
-|                            |
-|                            |
-|                            |
-‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+        console.log(`  ______________________________
+  |                            |    
+  |                            |
+  |                            |
+  |     There are no items     |
+  |                            |
+  |                            |
+  |                            |
+  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
     }
 }
 
@@ -119,13 +476,17 @@ function menuOpen(menu, key) {
     if (key === "\u000D") {
 
         if (choice === 0) {
-
+            
+            browsing = "status"
+            keyPress = " "
         } else if (choice === 1) {
 
             browsing = "inventory"
             keyPress = " "
         } else if (choice === 2) {
 
+            browsing = "equipment"
+            keyPress = " "
         } else if (choice === menu.length - 1) {
 
             console.clear()
@@ -146,15 +507,15 @@ function menuOpen(menu, key) {
     }
 
     console.clear()
-    console.log(`______________________________
-|                            |    
-|                            |
-|                            |
-|       ${menu.join("        |\n|       ")}        |
-|                            |
-|                            |
-|                            |
-‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+    console.log(`  ______________________________
+  |                            |    
+  |                            |
+  |                            |
+  |       ${menu.join("        |\n  |       ")}        |
+  |                            |
+  |                            |
+  |                            |
+  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
 }
 
 function seeMap(map) {
@@ -170,15 +531,15 @@ function seeMap(map) {
 
         if (copy.indexOf(copy[i]) === 0) {
 
-            console.log("______________________________")
-            console.log(`|${copy[i].join("\x1b[42m  \x1b[0m")}|`)
+            console.log("  ______________________________")
+            console.log(`  |${copy[i].join("\x1b[42m  \x1b[0m")}|`)
         } else if (copy.indexOf(copy[i]) === copy.length - 1) {
 
-            console.log(`|${copy[i].join("\x1b[42m  \x1b[0m")}|`)
-            console.log("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+            console.log(`  |${copy[i].join("\x1b[42m  \x1b[0m")}|`)
+            console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         } else {
 
-            console.log(`|${copy[i].join("\x1b[42m  \x1b[0m")}|`)
+            console.log(`  |${copy[i].join("\x1b[42m  \x1b[0m")}|`)
         }
     }
 }
@@ -252,33 +613,52 @@ function toMap(key) {
     seeMap(map)
 }
 
-function start(key) {
+function start() {
 
-    if (key === "\u001B" && escCount === 0) {
+    if (keyPress === "\u001B" && escCount === 0) {
 
         browsing = "menu"
         escCount += 1
         itemSelected = false
-        enterPress = false
-    } else if (key === "\u001B" && escCount === 1) {
+
+        menu = ["\x1b[30;47m[  Status   ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[   Leave   ]"]
+        choice = 0
+
+        itemNames = []
+        seeItens = []
+        choiceItems = 0
+        choiceLinear = 0
+        choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
+    } else if (keyPress === "\u001B" && escCount === 1) {
 
         escCount -= 1
         browsing = "toMap"
         itemSelected = false
-        enterPress = false
     }
 
     if(browsing === "toMap"){
 
-        toMap(key)
+        toMap(keyPress)
     }
+
     if(browsing === "menu"){
 
-        menuOpen(menu, key)
+        menuOpen(menu, keyPress)
     }
+
     if(browsing === "inventory"){
 
-        inventory(key, player, itemNames, choiceUse, previousItems, seeItens)
+        inventory(player, choiceUse, previousItems, seeItens)
+    }
+
+    if(browsing === "equipment"){
+
+        seeEquipment(player, equpedNames, choiceUnUse, previousEquipped, seeEquped)
+    }
+
+    if(browsing === "status"){
+
+        seeStatus(player)
     }
 }
 
@@ -304,8 +684,10 @@ let player = {
 
     name: "",
     hp: 100,
+    hpMax: 100,
     damage: 5,
-    inventory: []
+    inventory: [],
+    equipment: ["slot empy", "slot empy", "slot empy", "slot empy", "slot empy"]
 }
 
 let items = [
@@ -335,8 +717,19 @@ let choiceItems = 0
 let choiceLinear = 0
 let choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
 let previousItems = ["[    Use    ]", "[    Leave    ]"]
+
 let itemSelected = false
-let enterPress = false
+
+let slots = ["helmet", "chestplate", "pants", "boots", "weapon"]
+let buffs = ["hp", "damage"]
+let choiceUnUse = ["\x1b[30;47m[    Unuse    ]\x1b[0m", "[    Leave    ]"]
+let previousEquipped = ["[    Unuse    ]", "[    Leave    ]"]
+let equpedNames = []
+let seeEquped = []
+let linearUnUse = 0
+let choiceEquip = 0
+
+let statusPlayer = []
 
 let escCount = 0
 let browsing = "toMap"
@@ -346,6 +739,7 @@ console.clear()
 seeMap(map)
 
 process.stdin.on('data', (key) => {
+
     keyPress = key
-    start(keyPress)
+    start()
 })
