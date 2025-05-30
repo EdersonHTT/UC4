@@ -59,10 +59,16 @@ function seeStatus(player){
 
 function use(itemNu) {
 
-    if(player.inventory[itemNu].nome === "life potion"){
+    if(player.inventory[itemNu].name === "life potion"){
 
         if(player.hp < player.hpMax){
             player.hp += player.inventory[itemNu].heal
+
+            if(player.hp > player.hpMax){
+
+                player.hp = player.hpMax
+            }
+
             player.inventory[itemNu].amount -= 1
                 
             if(player.inventory[itemNu].amount <= 0){
@@ -376,6 +382,43 @@ function inventory(player, choiceUse, previous) {
                 console.log("  |                            |")
                 console.log("  |                            |")
                 console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
+                console.log("  ______________________________")
+                console.log("  |                            |")
+                    
+                for(let x = 0; x <= statusItens.length; x++){
+                    
+                    if(player.inventory[choiceItems][statusItens[x]] || player.inventory[choiceItems][statusItens[x]] === 0){
+                        let show = statusItens[x]+": " + player.inventory[choiceItems][statusItens[x]]
+                        let spaces = ""
+                        let fullText
+
+                        let valor = 20 - show
+                        valor = Math.floor(valor / 2)
+
+                        for(let v = 0; v < valor; v++){
+
+                            spaces += " "
+                        }
+
+                        fullText = show + spaces
+
+                        if(fullText.length < 20){
+
+                            for(let s = 0; fullText.length < 20;  s++){
+
+                                fullText += " "
+                            }
+
+                        fullText += "|"
+
+                        console.log("  |        " + fullText)
+                    }
+                }
+            }
+
+                console.log("  |                            |")
+                console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         } 
         
         if(itemSelected){
@@ -683,7 +726,7 @@ let map = [
 let player = {
 
     name: "",
-    hp: 100,
+    hp: 95,
     hpMax: 100,
     damage: 5,
     inventory: [],
@@ -706,6 +749,7 @@ let items = [
 
     { name: "boots", hp: 5, type: "boots"}
 ]
+let statusItens = ["heal", "amount", "buff",  "shifts",  "hp", "damage"]
 
 let menu = ["\x1b[30;47m[  Status   ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[   Leave   ]"]
 let choice = 0
