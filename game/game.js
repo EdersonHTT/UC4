@@ -383,8 +383,8 @@ function inventory(player, choiceUse, previous) {
                 console.log("  |                            |")
                 console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
 
-                console.log("  ______________________________")
-                console.log("  |                            |")
+                console.log("__________________________________")
+                console.log("|                                |")
                     
                 for(let x = 0; x <= statusItens.length; x++){
                     
@@ -393,7 +393,7 @@ function inventory(player, choiceUse, previous) {
                         let spaces = ""
                         let fullText
 
-                        let valor = 20 - show
+                        let valor = 21 - show
                         valor = Math.floor(valor / 2)
 
                         for(let v = 0; v < valor; v++){
@@ -403,22 +403,22 @@ function inventory(player, choiceUse, previous) {
 
                         fullText = show + spaces
 
-                        if(fullText.length < 20){
+                        if(fullText.length < 21){
 
-                            for(let s = 0; fullText.length < 20;  s++){
+                            for(let s = 0; fullText.length < 21;  s++){
 
                                 fullText += " "
                             }
 
                         fullText += "|"
 
-                        console.log("  |        " + fullText)
+                        console.log("|           " + fullText)
                     }
                 }
             }
 
-                console.log("  |                            |")
-                console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+                console.log("|                                |")
+                console.log("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         } 
         
         if(itemSelected){
@@ -446,6 +446,7 @@ function inventory(player, choiceUse, previous) {
                     itemNames = []
                     seeItens = []
                     use(choiceItems)
+                    choiceItems = 0
                     return
                 } else {
 
@@ -632,7 +633,7 @@ function move(map, direction, forms, player, items) {
 
                         for (let v = 0; v < player.inventory.length; v++) {
 
-                            if (player.inventory[v].potion === "life") {
+                            if (player.inventory[v].name === "life potion") {
 
                                 player.inventory[v].amount += 3
                             }
@@ -725,12 +726,12 @@ let map = [
 
 let player = {
 
-    name: "",
-    hp: 95,
+    name: "Ederson",
+    hp: 100,
     hpMax: 100,
     damage: 5,
     inventory: [],
-    equipment: ["slot empy", "slot empy", "slot empy", "slot empy", "slot empy"]
+    equipment: ["slot empty", "slot empty", "slot empty", "slot empty", "slot empty"]
 }
 
 let items = [
