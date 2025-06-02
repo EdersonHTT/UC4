@@ -2,6 +2,106 @@ process.stdin.setRawMode(true)
 process.stdin.resume()
 process.stdin.setEncoding('utf8')
 
+import { Monster } from "./Monster.js"
+
+function damagePlayer(){
+    interval = setInterval(()=>{
+        if(hit === 0){
+            sum = 1
+
+        } else if(hit === damageRange.length-1){
+            sum = -1
+
+        }
+
+        hit += sum
+
+        copy[hit] = "\x1b[47m \x1b[0m"
+        copy[hit-sum] = damageRange[hit-sum]
+        console.clear()
+        console.log(enemy.forma)
+        console.log("          | "+copy.join(" ")+" |\n")
+
+        if(keyPress === "\u000D"){
+            console.log(keyPress)
+
+            if(hit <= 2 || hit >= damageRange.length-4){
+                reductionDamage = player.damage - (player.damage/3)
+
+            } else if(hit > 2 && hit < 5 || hit > 6 && hit < damageRange.length-4){
+                reductionDamage = player.damage - (player.damage/2)
+
+            }
+
+            enemy.hp -= player.damage - reductionDamage
+            player.hp = enemy.Damage(player)
+            turnPlayer = false
+            clearInterval(interval)
+            fight(menuFight, player)
+            return
+        }
+    }, 1000)
+}
+
+function fight(menuFight, player){
+
+    if(!turnPlayer){
+        clearInterval(interval)
+
+        if(battleStart){
+            battleStart = false
+            enemy = new Monster()
+        }
+
+        if (keyPress === "\u000D") {
+            if (choice === 0) {
+                
+                keyPress = " "
+                turnPlayer = true
+                fight(menuFight, player)
+                return
+            } else if (choice === 1) {
+
+                browsing = "inventory"
+                keyPress = " "
+            } else if (choice === 2) {
+
+                browsing = "equipment"
+                keyPress = " "
+            } else if(choice === 0) {
+                
+                browsing = "status"
+                keyPress = " "
+            }
+
+        } else if (keyPress === "a" && chooseAction > 0 && chooseAction <= menuFight.length - 1 && menuFight.length != 1) {
+
+            chooseAction -= 1
+
+            chosenAction[chooseAction + 1] = menuFight[chooseAction + 1]
+            chosenAction[chooseAction] = `\x1b[30;47m${menuFight[chooseAction]}\x1b[0m`
+        } else if (keyPress === "d" && chooseAction < menuFight.length - 1 && chooseAction >= 0 && menuFight.length != 1) {
+
+            chooseAction += 1
+
+            chosenAction[chooseAction - 1] = menuFight[chooseAction - 1]
+            chosenAction[chooseAction] = `\x1b[30;47m${menuFight[chooseAction]}\x1b[0m`
+        }   
+
+        console.clear()
+        console.log(enemy.forma)
+        console.log(`______________________________________________________________
+|                                                            |
+| ${chosenAction.join(" ")} |
+|                                                            |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+    } else {
+
+        damagePlayer()
+    }
+
+}
+
 function seeStatus(player){
 
     statusPlayer = [
@@ -56,6 +156,38 @@ function seeStatus(player){
     console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
 
 }
+
+function desuse(itemNu){
+
+    if(justEquipped.includes(justEquipped[itemNu])){
+
+        for(let b = 0; b < buffs.length; b++){
+
+            if(justEquipped[itemNu][buffs[b]]){
+
+                if(justEquipped[itemNu][buffs[b]] === "hp"){
+
+                    player["hpMax"] -= justEquipped[itemNu][buffs[b]]
+                }
+                player[buffs[b]] -= justEquipped[itemNu][buffs[b]]
+            }
+        }
+
+        player.inventory.push(justEquipped[itemNu])
+
+        for(let i = 0; i < player.equipment.length; i++){
+
+            if(player.equipment[i] === justEquipped[itemNu]){
+
+                player.equipment[i] = "slot empty"
+            }
+        }
+
+        
+        justEquipped.splice(itemNu, 1)
+    } 
+}
+
 
 function use(itemNu) {
 
@@ -132,10 +264,17 @@ function use(itemNu) {
         }
     }
 
+    itemNames = []
+    seeItens = []
     inventory(player, choiceUse, previous)
 }
 
-function seeEquipment(player, equpedNames, choiceUnUse, previous) {
+function seeEquipment(player, choiceUnUse, previous) {
+
+    if(choiceEquip >= player.equipment.length){
+
+        choiceEquip = 0
+    }
     
     for (let i = 0; i < player.equipment.length; i++) {
 
@@ -145,10 +284,12 @@ function seeEquipment(player, equpedNames, choiceUnUse, previous) {
 
                 if(equpedNames.length === 0){
 
+                    justEquipped.push(player.equipment[i]) 
                     seeEquped.push("-> "+player.equipment[i].name) 
                     equpedNames.push(player.equipment[i].name)    
                 } else {
 
+                    justEquipped.push(player.equipment[i]) 
                     seeEquped.push("   "+player.equipment[i].name) 
                     equpedNames.push(player.equipment[i].name)
                 }
@@ -215,6 +356,43 @@ function seeEquipment(player, equpedNames, choiceUnUse, previous) {
                 console.log("  |                            |")
                 console.log("  |                            |")
                 console.log("  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+                
+                console.log("__________________________________")
+                console.log("|                                |")
+                    
+                for(let x = 0; x <= statusItens.length; x++){
+                    
+                    if(choiceEquip < justEquipped.length && justEquipped[choiceEquip].hasOwnProperty(statusItens[x])){
+                        let show = statusItens[x]+": " + justEquipped[choiceEquip][statusItens[x]]
+                        let spaces = ""
+                        let fullText
+
+                        let valor = 21 - show
+                        valor = Math.floor(valor / 2)
+
+                        for(let v = 0; v < valor; v++){
+
+                            spaces += " "
+                        }
+
+                        fullText = show + spaces
+
+                        if(fullText.length < 21){
+
+                            for(let s = 0; fullText.length < 21;  s++){
+
+                                fullText += " "
+                            }
+
+                        fullText += "|"
+
+                        console.log("|           " + fullText)
+                        }
+                    }
+                }
+
+            console.log("|                                |")
+            console.log("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         } 
         
         if(itemSelected){
@@ -237,12 +415,21 @@ function seeEquipment(player, equpedNames, choiceUnUse, previous) {
 
                 if(linearUnUse === 0){
 
-                    //desEquip(choiceEquip)
+                    
+                    desuse(choiceEquip)
+                    itemSelected = false
+                    keyPress = " "
+                    equpedNames = []
+                    seeEquped = []
+                    choiceUnUse = ["\x1b[30;47m[    Unuse    ]\x1b[0m", "[    Leave    ]"]
+                    previousEquipped = ["[    Unuse    ]", "[    Leave    ]"]
+                    seeEquipment(player, choiceUnUse, previousEquipped)
+                    return
                 } else {
 
                     itemSelected = false
                     keyPress = " "
-                    seeEquipment(player, equpedNames, choiceUnUse, previous)
+                    seeEquipment(player, choiceUnUse, previousEquipped)
                     return
                 }
             }
@@ -306,6 +493,10 @@ function seeEquipment(player, equpedNames, choiceUnUse, previous) {
 }
 
 function inventory(player, choiceUse, previous) {
+
+    if(choiceItems >= player.inventory.length){
+        choiceItems = 0
+    }
     
     for (let i = 0; i < player.inventory.length; i++) {
 
@@ -388,7 +579,7 @@ function inventory(player, choiceUse, previous) {
                     
                 for(let x = 0; x <= statusItens.length; x++){
                     
-                    if(player.inventory[choiceItems][statusItens[x]] || player.inventory[choiceItems][statusItens[x]] === 0){
+                    if(choiceItems < player.inventory.length && player.inventory[choiceItems].hasOwnProperty(statusItens[x])){
                         let show = statusItens[x]+": " + player.inventory[choiceItems][statusItens[x]]
                         let spaces = ""
                         let fullText
@@ -413,9 +604,9 @@ function inventory(player, choiceUse, previous) {
                         fullText += "|"
 
                         console.log("|           " + fullText)
+                        }
                     }
                 }
-            }
 
                 console.log("|                                |")
                 console.log("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
@@ -446,7 +637,6 @@ function inventory(player, choiceUse, previous) {
                     itemNames = []
                     seeItens = []
                     use(choiceItems)
-                    choiceItems = 0
                     return
                 } else {
 
@@ -609,32 +799,30 @@ function move(map, direction, forms, player, items) {
             if (map[i][k] === forms[2] && map.includes(map[(i + vertical)]) && map[(i + vertical)].includes(map[(i + vertical)][(k + horizontal)])) {
 
                 if (map[(i + vertical)][(k + horizontal)] != forms[0] && map[(i + vertical)][(k + horizontal)] != forms[1] && map[(i + vertical)][(k + horizontal)] != forms[3]) {
-
                     let temp = map[(i + vertical)][(k + horizontal)]
                     map[(i + vertical)][(k + horizontal)] = map[i][k]
                     map[i][k] = temp
                     return
+
                 } else if (map[(i + vertical)][(k + horizontal)] === forms[1]) {
+                    browsing = "fight"
+                    battleStart = true
+                    fight(menuFight, player)
 
-
-                    map[(i + vertical)][(k + horizontal)] = map[i][k]
-                    map[i][k] = " "
                     return
                 } else if (map[(i + vertical)][(k + horizontal)] === forms[3]) {
 
-                    if (map.indexOf(map[i]) === 0, map[i].indexOf(map[i][k]) === 9) {
-
+                    if (map.indexOf(map[i + vertical]) === 0 && map[i].indexOf(map[i][k + horizontal]) === 9) {
                         player.inventory.push(items[0])
                         map[(i + vertical)][(k + horizontal)] = map[i][k]
                         map[i][k] = " "
-                    } else if (map.indexOf(map[i]) === 3, map[i].indexOf(map[i][k]) === 4) {
 
+                    } else if (map.indexOf(map[i + vertical]) === 4 && map[i].indexOf(map[i][k + horizontal]) === 4) {
                         player.inventory.push({ ...items[1] })
 
                         for (let v = 0; v < player.inventory.length; v++) {
 
                             if (player.inventory[v].name === "life potion") {
-
                                 player.inventory[v].amount += 3
                             }
                         }
@@ -642,7 +830,7 @@ function move(map, direction, forms, player, items) {
                         map[i][k] = " "
                         return
                     }
-
+                    console.log(map[(i + vertical)][(k + horizontal)])
                     return
                 }
             }
@@ -659,7 +847,7 @@ function toMap(key) {
 
 function start() {
 
-    if (keyPress === "\u001B" && escCount === 0) {
+    if (keyPress === "\u001B" && escCount === 0 && !inFight) {
 
         browsing = "menu"
         escCount += 1
@@ -673,10 +861,29 @@ function start() {
         choiceItems = 0
         choiceLinear = 0
         choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
-    } else if (keyPress === "\u001B" && escCount === 1) {
+    } else if (keyPress === "\u001B" && escCount === 1 && !inFight) {
 
         escCount -= 1
         browsing = "toMap"
+        itemSelected = false
+    } else if(keyPress === "\u001B" && escCount === 0 && inFight) {
+
+        browsing = "menu"
+        escCount += 1
+        itemSelected = false
+
+        menu = ["\x1b[30;47m[  Status   ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[   Leave   ]"]
+        choice = 0
+
+        itemNames = []
+        seeItens = []
+        choiceItems = 0
+        choiceLinear = 0
+        choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
+    } else if (keyPress === "\u001B" && escCount === 1 && inFight) {
+
+        escCount -= 1
+        browsing = "fight"
         itemSelected = false
     }
 
@@ -690,6 +897,12 @@ function start() {
         menuOpen(menu, keyPress)
     }
 
+    if(browsing === "fight"){
+
+        inFight = true
+        fight(menuFight, player)
+    }
+
     if(browsing === "inventory"){
 
         inventory(player, choiceUse, previousItems, seeItens)
@@ -697,7 +910,7 @@ function start() {
 
     if(browsing === "equipment"){
 
-        seeEquipment(player, equpedNames, choiceUnUse, previousEquipped, seeEquped)
+        seeEquipment(player, choiceUnUse, previousEquipped)
     }
 
     if(browsing === "status"){
@@ -771,6 +984,7 @@ let choiceUnUse = ["\x1b[30;47m[    Unuse    ]\x1b[0m", "[    Leave    ]"]
 let previousEquipped = ["[    Unuse    ]", "[    Leave    ]"]
 let equpedNames = []
 let seeEquped = []
+let justEquipped = []
 let linearUnUse = 0
 let choiceEquip = 0
 
@@ -780,7 +994,47 @@ let escCount = 0
 let browsing = "toMap"
 let keyPress
 
-console.clear()
+let menuFight = ["[ ❤ Fight ]", "[ Inventory ]", "[ Equipment ]", "[ Status ]", "[ Run ]"]
+let chosenAction = ["\x1b[30;47m[ ❤ Fight ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[ Status ]", "[ Run ]"]
+let chooseAction = 0
+let inFight = false
+let battleStart = false
+let turnPlayer = false
+let enemy
+
+let damageRange = [
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[41m \x1b[0m", 
+  "\x1b[41m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m"
+]
+let copy = [
+  "\x1b[47m \x1b[0m",
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[41m \x1b[0m", 
+  "\x1b[41m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[43m \x1b[0m", 
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m",
+  "\x1b[100m \x1b[0m"
+]
+let sum = 1
+let hit = 0
+let reductionDamage = 0
+let interval
+
 seeMap(map)
 
 process.stdin.on('data', (key) => {
