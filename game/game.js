@@ -6,7 +6,11 @@ import Monster from "./Monster.js";
 
 function damagePlayer(){
     if(keyPress === "\u000D"){
-        console.log(keyPress)
+        clearInterval(interval)
+
+        interval = setInterval(() => {
+            keyPress = " "
+        }, 200);
 
         if(hit <= 2 || hit >= damageRange.length-4){
             reductionDamage = Math.floor(player.damage - (player.damage/3))
@@ -15,17 +19,65 @@ function damagePlayer(){
             reductionDamage = Math.floor(player.damage - (player.damage/2))
 
         }
+        
+        let damageGiven = player.damage - reductionDamage
 
-        enemy.hp -= player.damage - reductionDamage
-        player.hp = enemy.Damage(player)
-        turnPlayer = false
+        percentageDamage = Math.floor(((enemy.hp - damageGiven)/ enemy.hpMax) * 100)
+
+        enemy.hp -= damageGiven
+
+        if(enemy.hp <= 0){
+            enemy.hp = 0
+        } else if(enemy.hp <= (enemy.hpMax/3)){
+            formMonster = 2
+
+        }
+
+        console.clear()
+        console.log("\n   => "+enemy.name)
+        console.log("                     ______________________")
+        console.log("               Life: |"+enemy.bar.join("")+"| "+Math.floor((enemy.hp / enemy.hpMax)*100)+"%")
+        console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        console.log(enemy.forma[1])
+        console.log(`______________________________________________________________
+|                                                            |
+|         You take ${damageGiven} of damage           |
+|                                                            |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`+hit)
+
         keyPress = " "
-        clearInterval(interval)
-        fight(menuFight, player)
-        return
-    }
+        turnPlayer = false
 
-    if(turnPlayer && keyPress === " "){
+        setTimeout(() => {
+            let damageReceived = enemy.Damage(player)
+            player.hp -= damageReceived
+
+            console.clear()
+            console.log("\n   => "+enemy.name)
+            console.log("                     ______________________")
+            console.log("               Life: |"+enemy.bar.join("")+"| "+Math.floor((enemy.hp / enemy.hpMax)*100)+"%")
+            console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+            console.log(enemy.forma[3])
+            console.log(`______________________________________________________________
+|                                                            |
+|         ${enemy.name} take ${damageReceived} of damage           |
+|                                                            |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+            console.log("            ______________________")
+            console.log("  You Life: |"+player.bar.join("")+"| "+Math.floor((player.hp / player.hpMax)*100)+"%")
+            console.log("            ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
+            if(player.hp <= 0){
+                player.hp = 0
+            }
+
+            setTimeout(() => {
+                clearInterval(interval)
+                fight(menuFight, player)
+                return
+            }, 1000);
+        }, 1000);
+    }else if (turnPlayer && keyPress === " "){
         interval = setInterval(()=>{
         if(hit === 0){
             sum = 1
@@ -39,9 +91,14 @@ function damagePlayer(){
 
         copy[hit] = "\x1b[47m \x1b[0m"
         copy[hit-sum] = damageRange[hit-sum]
+
         console.clear()
-        console.log(enemy.forma+"\n")
-        console.log("                | "+copy.join(" ")+" |\n")
+        console.log("\n   => "+enemy.name)
+        console.log("                     ______________________")
+        console.log("               Life: |"+enemy.bar.join("")+"| "+Math.floor((enemy.hp / enemy.hpMax)*100)+"%")
+        console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        console.log(enemy.forma[formMonster]+"\n")
+        console.log("                  | "+copy.join(" ")+" |\n")
 
         
     }, 50)}
@@ -58,24 +115,31 @@ function fight(menuFight, player){
         }
 
         if (keyPress === "\u000D") {
-            if (choice === 0) {
+            if (chooseAction === 0) {
                 
                 keyPress = " "
                 turnPlayer = true
                 fight(menuFight, player)
                 return
-            } else if (choice === 1) {
+            } else if (chooseAction === 1) {
 
                 browsing = "inventory"
                 keyPress = " "
-            } else if (choice === 2) {
+            } else if (chooseAction === 2) {
 
                 browsing = "equipment"
                 keyPress = " "
-            } else if(choice === 0) {
+            } else if(chooseAction === 3) {
                 
                 browsing = "status"
                 keyPress = " "
+            } else if(chooseAction === 4) {
+                
+                browsing = "toMap"
+                inFight = false
+                keyPress = " "
+                start()
+                return
             }
 
         } else if (keyPress === "a" && chooseAction > 0 && chooseAction <= menuFight.length - 1 && menuFight.length != 1) {
@@ -92,19 +156,57 @@ function fight(menuFight, player){
             chosenAction[chooseAction] = `\x1b[30;47m${menuFight[chooseAction]}\x1b[0m`
         }   
 
-        for(let i = 0; i < bar.length; i++){
-            
+        let porcentLife = Math.floor((player.hp / player.hpMax)*100)
 
+        if(percentageDamage){
+            let lifeTaken = Math.floor(((100-percentageDamage) / 100) * enemy.bar.length-1)
+            
+            let lifeTakenPlayer = Math.floor(((100-porcentLife) / 100) * player.bar.length-1)
+
+
+            if(enemy.hp === 0){
+                for(let i = 0; i < enemy.bar.length; i++){
+                    enemy.bar[i] = " "
+
+                }
+
+            } else if(player.hp === 0){
+                for(let i = 0; i < player.bar.length; i++){
+                    player.bar[i] = " "
+
+                }
+
+            } else {
+                for(let i = 0; i < lifeTaken; i++){
+                    enemy.bar[enemy.bar.length-1-i] = " "
+
+                }
+
+                for(let i = 0; i < lifeTakenPlayer; i++){
+                    player.bar[enemy.bar.length-1-i] = " "
+
+                }
+
+            }
+
+            percentageDamage = 0
         }
 
         console.clear()
-        console.log("                     |"+bar.join("")+"|")
-        console.log(enemy.forma)
+        console.log("\n   => "+enemy.name)
+        console.log("                     ______________________")
+        console.log("               Life: |"+enemy.bar.join("")+"| "+Math.floor((enemy.hp / enemy.hpMax)*100)+"%")
+        console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        console.log(enemy.forma[formMonster])
         console.log(`______________________________________________________________
 |                                                            |
 | ${chosenAction.join(" ")} |
 |                                                            |
 ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
+        console.log("            ______________________")
+        console.log("  You Life: |"+player.bar.join("")+"| "+porcentLife+"%")
+        console.log("            ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+
     } else {
 
         damagePlayer()
@@ -876,23 +978,8 @@ function start() {
         escCount -= 1
         browsing = "toMap"
         itemSelected = false
-    } else if(keyPress === "\u001B" && escCount === 0 && inFight) {
+    } else if (keyPress === "\u001B" && inFight) {
 
-        browsing = "menu"
-        escCount += 1
-        itemSelected = false
-
-        menu = ["\x1b[30;47m[  Status   ]\x1b[0m", "[ Inventory ]", "[ Equipment ]", "[   Leave   ]"]
-        choice = 0
-
-        itemNames = []
-        seeItens = []
-        choiceItems = 0
-        choiceLinear = 0
-        choiceUse = ["\x1b[30;47m[    Use    ]\x1b[0m", "[    Leave    ]"]
-    } else if (keyPress === "\u001B" && escCount === 1 && inFight) {
-
-        escCount -= 1
         browsing = "fight"
         itemSelected = false
     }
@@ -952,9 +1039,10 @@ let player = {
     name: "Ederson",
     hp: 100,
     hpMax: 100,
-    damage: 5,
+    damage: 10,
     inventory: [],
-    equipment: ["slot empty", "slot empty", "slot empty", "slot empty", "slot empty"]
+    equipment: ["slot empty", "slot empty", "slot empty", "slot empty", "slot empty"],
+    bar: ["█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█"]
 }
 
 let items = [
@@ -1043,8 +1131,9 @@ let copy = [
 let sum = 1
 let hit = 0
 let reductionDamage = 0
+let percentageDamage
 let interval
-let bar = ["█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█"]
+let formMonster = 0
 
 seeMap(map)
 
