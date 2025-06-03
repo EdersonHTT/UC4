@@ -2,10 +2,31 @@ process.stdin.setRawMode(true)
 process.stdin.resume()
 process.stdin.setEncoding('utf8')
 
-import { Monster } from "./Monster.js"
+import Monster from "./Monster.js";
 
 function damagePlayer(){
-    interval = setInterval(()=>{
+    if(keyPress === "\u000D"){
+        console.log(keyPress)
+
+        if(hit <= 2 || hit >= damageRange.length-4){
+            reductionDamage = Math.floor(player.damage - (player.damage/3))
+
+        } else if(hit > 2 && hit < 5 || hit > 6 && hit < damageRange.length-4){
+            reductionDamage = Math.floor(player.damage - (player.damage/2))
+
+        }
+
+        enemy.hp -= player.damage - reductionDamage
+        player.hp = enemy.Damage(player)
+        turnPlayer = false
+        keyPress = " "
+        clearInterval(interval)
+        fight(menuFight, player)
+        return
+    }
+
+    if(turnPlayer && keyPress === " "){
+        interval = setInterval(()=>{
         if(hit === 0){
             sum = 1
 
@@ -19,37 +40,20 @@ function damagePlayer(){
         copy[hit] = "\x1b[47m \x1b[0m"
         copy[hit-sum] = damageRange[hit-sum]
         console.clear()
-        console.log(enemy.forma)
-        console.log("          | "+copy.join(" ")+" |\n")
+        console.log(enemy.forma+"\n")
+        console.log("                | "+copy.join(" ")+" |\n")
 
-        if(keyPress === "\u000D"){
-            console.log(keyPress)
-
-            if(hit <= 2 || hit >= damageRange.length-4){
-                reductionDamage = player.damage - (player.damage/3)
-
-            } else if(hit > 2 && hit < 5 || hit > 6 && hit < damageRange.length-4){
-                reductionDamage = player.damage - (player.damage/2)
-
-            }
-
-            enemy.hp -= player.damage - reductionDamage
-            player.hp = enemy.Damage(player)
-            turnPlayer = false
-            clearInterval(interval)
-            fight(menuFight, player)
-            return
-        }
-    }, 1000)
+        
+    }, 50)}
 }
 
 function fight(menuFight, player){
 
     if(!turnPlayer){
-        clearInterval(interval)
 
         if(battleStart){
             battleStart = false
+            keyPress = " "
             enemy = new Monster()
         }
 
@@ -88,7 +92,13 @@ function fight(menuFight, player){
             chosenAction[chooseAction] = `\x1b[30;47m${menuFight[chooseAction]}\x1b[0m`
         }   
 
+        for(let i = 0; i < bar.length; i++){
+            
+
+        }
+
         console.clear()
+        console.log("                     |"+bar.join("")+"|")
         console.log(enemy.forma)
         console.log(`______________________________________________________________
 |                                                            |
@@ -1034,6 +1044,7 @@ let sum = 1
 let hit = 0
 let reductionDamage = 0
 let interval
+let bar = ["█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█"]
 
 seeMap(map)
 
