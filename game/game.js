@@ -4,6 +4,74 @@ process.stdin.setEncoding('utf8')
 
 import Monster from "./Monster.js";
 
+function EndGame(){
+    console.clear()
+    console.log(`
+  _____________________________
+  |                           |
+  |                           |
+  |     Thank you for play    |
+  |                           |
+  |                           |
+  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+    `)
+}
+
+function endBatlle(win) {
+    if(!win){
+        browsing = "toMap"
+        keyPress = " "
+
+        map = [
+            [monster, tree, tree, " ", " ", " ", monster, " ", tree, item],
+            [" ", tree, " ", " ", " ", " ", " ", tree, tree, monster],
+            [" ", tree, " ", " ", " ", " ", " ", " ", tree, " "],
+            [" ", " ", " ", " ", tree, tree, " ", " ", " ", " "],
+            [" ", " ", " ", " ", item, tree, " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", tree, " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", tree, " ", " ", " ", " ", " ", " ", " ", " "],
+            [tree, tree, " ", " ", " ", " ", " ", " ", " ", tree],
+            [monster, " ", " ", " ", " ", " ", " ", formP, tree, tree],
+        ]
+
+        start()
+    } else {
+        browsing = "toMap"
+        keyPress = " "
+        turnPlayer = false
+
+        map[postionMonter[0]][postionMonter[1]] = " "
+        sum = 1
+        hit = 0
+        reductionDamage = 0
+        percentageDamage = 0
+        formMonster = 0
+        load = false
+        inFight = false
+        start()
+    }
+
+    let have = false
+    for(let i = 0; i < map.length; i++){
+        for(let k = 0; k < map[i].length; k++){
+            if(map[i][k] === monster){
+                have = true
+            
+            }
+        }
+    }
+    if(!have){
+        endGame = true
+        EndGame()
+
+        setTimeout(() => {
+            console.clear()
+            process.exit()
+        }, 1000);
+    }
+}
+
 function damagePlayer(){
     if(keyPress === "\u000D"){
         clearInterval(interval)
@@ -11,24 +79,39 @@ function damagePlayer(){
         interval = setInterval(() => {
             keyPress = " "
         }, 200);
-
         if(hit <= 2 || hit >= damageRange.length-4){
-            reductionDamage = Math.floor(player.damage - (player.damage/3))
+            reductionDamage = Math.floor(player.damage - (player.damage/2.5))
 
-        } else if(hit > 2 && hit < 5 || hit > 6 && hit < damageRange.length-4){
-            reductionDamage = Math.floor(player.damage - (player.damage/2))
+        } else if(hit > 2 && hit <= 4 || hit >= 7 && hit < damageRange.length-4){
+            reductionDamage = Math.floor(player.damage - (player.damage/1.5))
+
+        } else {
+            reductionDamage = 0
 
         }
+
+        load = true
         
         let damageGiven = player.damage - reductionDamage
 
         percentageDamage = Math.floor(((enemy.hp - damageGiven)/ enemy.hpMax) * 100)
 
-        enemy.hp -= damageGiven
+        if(player.hp > 0){
+            enemy.hp -= damageGiven
+
+        }
 
         if(enemy.hp <= 0){
-            enemy.hp = 0
-        } else if(enemy.hp <= (enemy.hpMax/3)){
+            for(let i = 0; i < enemy.bar.length; i++){
+                enemy.bar[i] = " "
+
+            }
+
+            endBatlle(true)
+            return
+        }
+        
+        if(enemy.hp <= (enemy.hpMax/3)){
             formMonster = 2
 
         }
@@ -40,17 +123,42 @@ function damagePlayer(){
         console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         console.log(enemy.forma[1])
         console.log(`______________________________________________________________
-|                                                            |
-|         You take ${damageGiven} of damage           |
-|                                                            |
-‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`+hit)
+|                                                            |`)
+        let descriptionPlayer = `|         You take ${damageGiven} of damage`
+        while(true){
+            if(descriptionPlayer.length <= 60){
+            descriptionPlayer += " "
+            } else {
+                break
+            }
+
+        }
+        
+            console.log(descriptionPlayer+"|")
+
+            console.log(`|                                                            |
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
 
         keyPress = " "
         turnPlayer = false
 
         setTimeout(() => {
             let damageReceived = enemy.Damage(player)
-            player.hp -= damageReceived
+
+            if(enemy.hp > 0){
+                player.hp -= damageReceived
+            }
+
+            if(player.hp === 0){
+                for(let i = 0; i < player.bar.length; i++){
+                    player.bar[i] = " "
+
+                }
+
+                
+                endBatlle(false)
+                return
+            }
 
             console.clear()
             console.log("\n   => "+enemy.name)
@@ -59,9 +167,20 @@ function damagePlayer(){
             console.log("                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
             console.log(enemy.forma[3])
             console.log(`______________________________________________________________
-|                                                            |
-|         ${enemy.name} take ${damageReceived} of damage           |
-|                                                            |
+|                                                            |`)
+            let description = `|         You take ${damageReceived} of damage`
+            while(true){
+                if(description.length <= 60){
+                description += " "
+                } else {
+                    break
+                }
+
+            }
+
+            console.log(description+"|")
+
+           console.log(`|                                                            |
 ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`)
             console.log("            ______________________")
             console.log("  You Life: |"+player.bar.join("")+"| "+Math.floor((player.hp / player.hpMax)*100)+"%")
@@ -72,11 +191,13 @@ function damagePlayer(){
             }
 
             setTimeout(() => {
+                load = false
                 clearInterval(interval)
                 fight(menuFight, player)
                 return
             }, 1000);
         }, 1000);
+
     }else if (turnPlayer && keyPress === " "){
         interval = setInterval(()=>{
         if(hit === 0){
@@ -106,7 +227,7 @@ function damagePlayer(){
 
 function fight(menuFight, player){
 
-    if(!turnPlayer){
+    if(!turnPlayer && !load){
 
         if(battleStart){
             battleStart = false
@@ -207,7 +328,7 @@ function fight(menuFight, player){
         console.log("  You Life: |"+player.bar.join("")+"| "+porcentLife+"%")
         console.log("            ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
 
-    } else {
+    } else if(turnPlayer && !load){
 
         damagePlayer()
     }
@@ -818,40 +939,40 @@ function inventory(player, choiceUse, previous) {
 }
 
 function menuOpen(menu, key) {
+    if(!endGame){
+        if (key === "\u000D") {
 
-    if (key === "\u000D") {
+            if (choice === 0) {
+                
+                browsing = "status"
+                keyPress = " "
+            } else if (choice === 1) {
 
-        if (choice === 0) {
-            
-            browsing = "status"
-            keyPress = " "
-        } else if (choice === 1) {
+                browsing = "inventory"
+                keyPress = " "
+            } else if (choice === 2) {
 
-            browsing = "inventory"
-            keyPress = " "
-        } else if (choice === 2) {
+                browsing = "equipment"
+                keyPress = " "
+            } else if (choice === menu.length - 1) {
 
-            browsing = "equipment"
-            keyPress = " "
-        } else if (choice === menu.length - 1) {
+                console.clear()
+                process.exit()
+            }
+        } else if (key === "w" && choice > 0 && choice <= menu.length - 1) {
 
-            console.clear()
-            process.exit()
+            choice -= 1
+
+            menu[choice + 1] = previous[choice + 1]
+            menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
+        } else if (key === "s" && choice < menu.length - 1 && choice >= 0) {
+
+            choice += 1
+
+            menu[choice - 1] = previous[choice - 1]
+            menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
         }
-    } else if (key === "w" && choice > 0 && choice <= menu.length - 1) {
-
-        choice -= 1
-
-        menu[choice + 1] = previous[choice + 1]
-        menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
-    } else if (key === "s" && choice < menu.length - 1 && choice >= 0) {
-
-        choice += 1
-
-        menu[choice - 1] = previous[choice - 1]
-        menu[choice] = `\x1b[30;47m${menu[choice]}\x1b[0m`
-    }
-
+    }   
     console.clear()
     console.log(`  ______________________________
   |                            |    
@@ -917,6 +1038,8 @@ function move(map, direction, forms, player, items) {
                     return
 
                 } else if (map[(i + vertical)][(k + horizontal)] === forms[1]) {
+
+                    postionMonter = [(i + vertical), (k + horizontal)]
                     browsing = "fight"
                     battleStart = true
                     fight(menuFight, player)
@@ -1039,7 +1162,7 @@ let player = {
     name: "Ederson",
     hp: 100,
     hpMax: 100,
-    damage: 10,
+    damage: 100,
     inventory: [],
     equipment: ["slot empty", "slot empty", "slot empty", "slot empty", "slot empty"],
     bar: ["█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█", "█"]
@@ -1050,8 +1173,6 @@ let items = [
     { name: "sword", damage: 10, type: "weapon"},
 
     { name: "life potion", heal: 10,  amount: 0, type: "potion" }, 
-
-    { name: "strength potion", buff: 15, shifts: 3, amount: 0, type: "potion" }, 
 
     { name: "helmet", hp: 5, type: "helmet"}, 
 
@@ -1134,6 +1255,9 @@ let reductionDamage = 0
 let percentageDamage
 let interval
 let formMonster = 0
+let load = false
+let postionMonter
+let endGame = false
 
 seeMap(map)
 
