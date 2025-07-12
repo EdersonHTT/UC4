@@ -29,14 +29,14 @@ create table pedidos(
 	id int primary key auto_increment,
     id_usuarios int not null,
     id_produtos int not null,
-    quiantidade int not null default 0,
+    quiantidade int not null default 1,
     data_pedido datetime default CURRENT_TIMESTAMP,
     foreign key (id_usuarios) references usuarios(id),
     foreign key (id_produtos) references produtos(id)
 );
 
 alter table pedidos 
-change column quiantidade quantidade int not null default 0;
+change column quiantidade quantidade int not null default 1;
 
 alter table pedidos add
 constraint fk_pedidos_usuarios
