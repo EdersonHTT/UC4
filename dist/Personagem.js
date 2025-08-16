@@ -1,0 +1,57 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Personagem = void 0;
+class Personagem {
+    constructor(nome, classe, vida, forca) {
+        this.nome = nome;
+        this.classe = classe;
+        this.vida = vida;
+        this.vidaMax = vida;
+        this.forca = forca;
+    }
+    atacar(oponente) {
+        let dano;
+        do {
+            dano = Math.floor(Math.random() * this.forca);
+        } while (dano < 5);
+        oponente.setVida(oponente.getVida() - dano);
+        console.log("Jogador " + this.nome + " Atacou!\nDeu: " + dano);
+    }
+    dano(oponente) {
+        let dano;
+        do {
+            dano = Math.floor(Math.random() * oponente.getForca());
+        } while (dano < 5);
+        this.setVida(this.vida - dano);
+        console.log(oponente.getNome() + " Atacou!\nDeu: " + dano);
+    }
+    curar(usoRodada) {
+        if (usoRodada > 0) {
+            return 0;
+        }
+        let cura = this.vidaMax - this.vida;
+        if (cura > 10) {
+            console.clear();
+            console.log("Curou " + 10 + " de vida!" + cura + " " + (this.vidaMax - this.vida));
+            this.setVida(this.vida + 10);
+            return 2;
+        }
+        this.setVida(this.vida + cura);
+        console.clear();
+        console.log("Curou " + cura + " de vida! \nVida 100%");
+        return 2;
+    }
+    setVida(vida) {
+        this.vida = vida;
+    }
+    getVida() {
+        return this.vida;
+    }
+    GetVidaMax() {
+        return this.vidaMax;
+    }
+    getNome() {
+        return this.nome;
+    }
+}
+exports.Personagem = Personagem;
