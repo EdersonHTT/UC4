@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Personagem = void 0;
 class Personagem {
-    constructor(nome, classe) {
-        this.vida = 100;
-        this.vidaMax = 100;
-        this.forca = 10;
+    constructor(nome, classe, vida, forca) {
         this.nome = nome;
         this.classe = classe;
+        this.vida = vida;
+        this.vidaMax = vida;
+        this.forca = forca;
     }
     atacar(oponente) {
         let dano;
@@ -27,23 +27,19 @@ class Personagem {
     }
     curar(usoRodada) {
         if (usoRodada > 0) {
-            console.log("Ainda não pode curar");
-            return;
+            return 0;
         }
-        else if (this.vida === this.vidaMax) {
-            console.log("Vida cheia!");
-            return;
-        }
-        let cura = (this.vidaMax - this.vida) - 10;
-        if (cura <= 0) {
-            this.setVida(this.vida + 10);
+        let cura = this.vidaMax - this.vida;
+        if (cura > 10) {
             console.clear();
-            console.log("Curou " + 10 + " de vida!" + cura);
-            return;
+            console.log("Curou " + 10 + " de vida!" + cura + " " + (this.vidaMax - this.vida));
+            this.setVida(this.vida + 10);
+            return 2;
         }
         this.setVida(this.vida + cura);
         console.clear();
         console.log("Curou " + cura + " de vida! \nVida 100%");
+        return 2;
     }
     setVida(vida) {
         this.vida = vida;
