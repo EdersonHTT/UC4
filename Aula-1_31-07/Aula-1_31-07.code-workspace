@@ -1,0 +1,45 @@
+{
+	"folders": [
+		{
+			"name": "Aula-1_31-07",
+			"path": "."
+		},
+		{
+			"name": "UC4",
+			"path": "../../../UC4"
+		},
+		{
+			"name": "Aula-2_04-08",
+			"path": "../Aula-2_04-08"
+		},
+		{
+			"name": "Aula-3_06-08",
+			"path": "../Aula-3_06-08"
+		},
+		{
+			"name": "Aula-4_07-08",
+			"path": "../Aula-4_07-08"
+		},
+		{
+			"name": "Aula-5_08-08",
+			"path": "../Aula-5_08-08"
+		},
+		{
+			"name": "Aula-6_11-08",
+			"path": "../Aula-6_11-08"
+		},
+		{
+			"name": "Aula-7_12-08",
+			"path": "../Aula-7_12-08"
+		},
+		{
+			"name": "Aula-8_14-08",
+			"path": "../Aula-8_14-08"
+		},
+		{
+			"name": "ExercicioRPG",
+			"path": "../ExercicioRPG"
+		}
+	],
+	"settings": {}
+}
