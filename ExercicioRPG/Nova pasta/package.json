@@ -1,0 +1,21 @@
+{
+  "name": "exerciciorpg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "tsc && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "readline-sync": "^1.4.10",
+    "types": "file:../../../../../../../readline-sync",
+    "typescript": "^5.9.2"
+  },
+  "description": "",
+  "devDependencies": {
+    "@types/readline-sync": "^1.4.8"
+  }
+}

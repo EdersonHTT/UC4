@@ -155,7 +155,6 @@ ${jogador.getNome() + ": " + jogador.getVida()}                 ${monstro.getNom
                 readline_sync_1.default.question("Enter para continuar!");
                 continue;
             }
-            console.log(jogador.curar(rodadaCura));
             rodadaCura += jogador.curar(rodadaCura);
             ;
             readline_sync_1.default.question("Enter para continuar!");

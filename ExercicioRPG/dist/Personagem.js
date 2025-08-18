@@ -32,7 +32,7 @@ class Personagem {
         let cura = this.vidaMax - this.vida;
         if (cura > 10) {
             console.clear();
-            console.log("Curou " + 10 + " de vida!" + cura + " " + (this.vidaMax - this.vida));
+            console.log("Curou " + 10 + " de vida!");
             this.setVida(this.vida + 10);
             return 2;
         }
