@@ -1,6 +1,7 @@
 export class Animal {
-    public name: string;
-    public weight: number;
+    // Protected deixa os atributos serem acessados nas classes filhas, diferente do private que os atributos só são acessados dentro da classe.
+    protected name: string;
+    protected weight: number;
 
     constructor(name:string, weight: number) {
         this.name = name;
