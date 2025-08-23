@@ -11,7 +11,7 @@ heroi.atacar(vilao);
 const carro:Carro = new Carro(30);
 
 console.log(carro.getVelociade());
-carro.acelerar(20);
+carro.acelerar();
 console.log(carro.getVelociade());
 
 const conta:ContaPoupanca = new ContaPoupanca(1000);

@@ -5,7 +5,7 @@ export class Carro extends Veiculo {
         super(velociadade);
     }
 
-    acelerar(acrecimo: number):void {
-        this.velocidade += acrecimo;
+    acelerar():void {
+        this.velocidade *= 1.2;
     }
 }
