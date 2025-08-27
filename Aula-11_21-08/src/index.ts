@@ -43,15 +43,12 @@
 
 // Importa classes e o readline-sync
 import read from "readline-sync";
-import { Pessoa } from "./trabalho/Pessoa";
 import { Doador } from "./trabalho/Doador";
 import { SistemaHemocentro } from "./trabalho/SistemaHemocentro";
 
-// Classe Date para poder pegar a data de agora
-const date:Date = new Date();
-
 // Boolean para poder parar o loop
 let rodando = true;
+
 // Loop
 do {
     console.clear();
@@ -74,7 +71,7 @@ do {
             const idade:number = parseInt(read.question("Idade: "));
             const peso:number = parseInt(read.question("Peso: "));
             const tipoSangue:string = read.question("Tipo sanguineo: ");
-            const ultimaDoacao:string = date.toLocaleDateString("pt-BR");
+            const ultimaDoacao:string = read.question("Data da ultima doacao (dd/MM/yyyy): ");
 
             // Cadastra o doador na lista da classe SistemaHemocentro e retorna um sucesso
             console.log(SistemaHemocentro.caastrardoadoador(new Doador(nome, idade, peso, tipoSangue, ultimaDoacao)));
@@ -98,11 +95,13 @@ do {
             SistemaHemocentro.listarPorDataUltimaDoacao(read.question("Data da doacao: "))
             read.question("Enter para continuar... ");
         break;
-        case "5":
+        case "20":
+            console.clear();
             console.log("Saindo...");
             rodando = false;
         break;
         default:
+            console.clear();
             console.log("Opcao invalidade");
             read.question("Enter para continuar... ")
         break;

@@ -50,7 +50,7 @@ export class SistemaHemocentro {
         console.log("------------------------");
         console.log("NOME | IDADE | PESO | TIPO SANGUÍNEO | ÚLTIMA DOAÇÃO");
         console.log("-----------------------------------------------------");
-        const encontrados = this.doadores.filter(d => d.getDataUltimaDoacao() === data);
+        const encontrados = this.doadores.filter(d => parseInt(d.getDataUltimaDoacao().replace("/", "")) <= parseInt(data.replace("/", "")));
         encontrados.forEach(d => {
             console.log(
                 `${d.getNome()} | ${d.getIdade()} | ${d.getPeso()} | ${d.getTipoSangue()} | ${d.getDataUltimaDoacao()}`

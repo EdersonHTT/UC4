@@ -1,8 +1,8 @@
 // classe 
 export class Pessoa {
-    private nome: string;
-    private idade: number;
-    private peso: number;
+    protected nome: string;
+    protected idade: number;
+    protected peso: number;
 
     // Contrutor para inicializar os atributos da pessoa
     constructor(nome:string, idade:number, peso:number) {
