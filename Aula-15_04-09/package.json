@@ -1,12 +1,13 @@
 {
-  "name": "aula-14_01-09",
+  "name": "aula-15_04-08",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "tsc && node dist/index.js && node dist/Konoha.js"
+    "start": "tsc && node dist/index.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
