@@ -4,7 +4,7 @@
 
 2 - C
 
-3 - B
+3 - B(C-acertei mentalmente-minha dislexia botou b)
 
 4 - B
 
@@ -31,5 +31,5 @@ Fetching...
 vai dar erro por conta que square não extende Shape
 
 4 - 
-Sim, ocorrerá erro por conta que não pode por logica.
+Sim, ocorrerá erro por conta que não pode por logica e os parametros.
  */
