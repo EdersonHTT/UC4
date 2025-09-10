@@ -33,9 +33,17 @@ function cadastrar(escolha: string): string {
 }
 
 function listar() {
+    const estoques = [estoqueBrinquedo, estoqueEletronico, estoqueLivro, estoqueRoupa];
 
-    console.log("==> Roupa")
-    estoqueRoupa.listar().forEach(elemento)
+    estoques.forEach(elemento => {
+        elemento.listar().forEach((produtos, key) => {
+            if(produtos instanceof Livro) {
+                key === 0? console.log("===> Livros:") : "Sem titulo.";
+
+                console.log("")
+            }
+        });
+    });
 }
 
 do {
