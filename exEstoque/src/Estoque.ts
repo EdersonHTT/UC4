@@ -1,7 +1,7 @@
 export class Estoque<T> {
     private itens:T[] = [];
 
-    adicionar(item:T) {
+    adicionar(item:T): void {
         this.itens.push(item);
     }
 
@@ -13,5 +13,7 @@ export class Estoque<T> {
         this.itens.splice(indice, 1); 
     }
 
-    buscas():
+    buscar(condicao: (item: T) => boolean): T[] {
+        condicao
+    }
 }
