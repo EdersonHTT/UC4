@@ -14,6 +14,12 @@ export class Estoque<T> {
     }
 
     buscar(condicao: (item: T) => boolean): T[] {
-        condicao
+        const filtrado:T[] = [];
+        this.itens.forEach(item => {
+            if(condicao(item)) {
+                filtrado.push(item);
+            }
+        })
+        return filtrado;
     }
 }

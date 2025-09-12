@@ -32,12 +32,38 @@ function cadastrar(escolha: string): string {
     return "Cadastrado com sucesso!";
 }
 
-function pegaValorMax(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[]): (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[]{
-    estoques.forEach(elemento => {
+function remove(escolha:string, indice:number):string {
+    switch (escolha.toLowerCase()) {
+        case "livro":
+            estoqueLivro.remover(indice);
+            break;
+        case "roupa":
+            estoqueRoupa.remover(indice);
+            break;
+        case "brinquedo":
+            estoqueBrinquedo.remover(indice);
+            break;
+        case "ele.questiotronico":
+            estoqueEletronico.remover(indice);
+            break;
+        default:
+            return "Valor invalido.";
+    }
+
+    return "Produto deletado."
+}
+
+function pegaValorMax(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[], valorRef:number): (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[]{
+    const estoquesFiltrar = estoques;
+    estoquesFiltrar.forEach(elemento => {
         elemento.listar().forEach((produtos, key) => {
-            
+            if(produtos.preco > valorRef) {
+                elemento.listar().splice(key, 1);
+            }
         });
     });
+
+    return estoquesFiltrar;
 }
 
 function filtrar(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[]) {
@@ -69,7 +95,13 @@ function filtrar(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico
                 listar(todosEstoques);
                 read.question("Enter para continuar...");
                 resposta = "4";
-                break
+                break;
+            case "3":
+                const estoqueTrocado = pegaValorMax(estoques, parseInt(read.question("Digite o valor maximo de preco: ")));
+                listar(estoqueTrocado);
+                read.question("Enter para continuar...");
+                resposta = "4";
+                break;
         }
     } while (resposta != "4")
 }
@@ -83,19 +115,19 @@ function listar(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico>
             if (produtos instanceof Livro) {
                 key === 0 ? console.log("=====> Livros:") : "Sem titulo.";
 
-                console.log(`Descricao: ${produtos.descricao} | Autor: ${produtos.autor} | Valor: ${produtos.preco}`)
+                console.log(`ID: ${key} | Descricao: ${produtos.descricao} | Autor: ${produtos.autor} | Valor: ${produtos.preco}`)
             } else if (produtos instanceof Roupa) {
                 key === 0 ? console.log("=====> Roupas:") : "Sem titulo.";
 
-                console.log(`Descricao: ${produtos.descricao} | Tamanho: ${produtos.tamanho} | Valor: ${produtos.preco}`)
+                console.log(`ID: ${key} | Descricao: ${produtos.descricao} | Tamanho: ${produtos.tamanho} | Valor: ${produtos.preco}`)
             } else if (produtos instanceof Eletronico) {
                 key === 0 ? console.log("=====> Eletronicos:") : "Sem titulo.";
 
-                console.log(`Modelo: ${produtos.modelo} | Marca: ${produtos.marca} | Valor: ${produtos.preco}`)
+                console.log(`ID: ${key} | Modelo: ${produtos.modelo} | Marca: ${produtos.marca} | Valor: ${produtos.preco}`)
             } else {
                 key === 0 ? console.log("=====> Brinquedos:") : "Sem titulo.";
 
-                console.log(`Nome: ${produtos.nome} | Idade Minima: ${produtos.idadeMinima} | Valor: ${produtos.preco}`)
+                console.log(`ID: ${key} | Nome: ${produtos.nome} | Idade Minima: ${produtos.idadeMinima} | Valor: ${produtos.preco}`)
             }
         });
     });
@@ -147,16 +179,26 @@ do {
     -> Brinquedo
             `);
             console.log(cadastrar(read.question()));
+            read.question("Enter para continuar... ");
             break;
         case "2":
             console.clear();
             const estoques = [estoqueBrinquedo, estoqueEletronico, estoqueLivro, estoqueRoupa];
             listar(estoques);
-            menuListagem()
+            menuListagem(estoques)
             break;
         case "3":
             console.clear()
+            console.log(`
+    Opções:
+    -> Roupa
+    -> Eletronico
+    -> Livro
+    -> Brinquedo
+            `);
 
+            console.log(remove(read.question("Opcao:"), parseInt(read.question("ID do produto: "))));
+            read.question("Enter para continuar... ");
             break;
         case "4":
             console.clear()
