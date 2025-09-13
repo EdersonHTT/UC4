@@ -53,6 +53,92 @@ function remove(escolha:string, indice:number):string {
     return "Produto deletado."
 }
 
+function buscar(escolha:string):string {
+    switch (escolha.toLowerCase()) {
+        case "livro":
+            console.log(`
+    ==> Opcoes
+    1 -> Autor
+    2 -> Preco
+            `)
+            switch(read.question("Escolha uma opcao: ")) {
+                case "1":
+                    estoqueLivro.buscar(
+                        (item) => {
+                            return item.autor === read.question("Autor: ")
+                        }
+                    );
+                    break;
+                case "2":
+                    estoqueLivro.buscar(
+                        (item) => {
+                            return item.preco === parseInt(read.question("preco: "))
+                        }
+                    );
+                    break;
+            }
+            break;
+        case "roupa":
+            console.log(`
+    ==> Opcoes
+    1-> Tamanho
+    2-> Preco
+            `)
+            switch(read.question("Escolha uma opcao: ")) {
+                case "1":
+                    estoqueRoupa.buscar(
+                        (item) => {
+                            return item.tamanho === parseInt(read.question("Tamanho: "))
+                        }
+                    );
+                    break;
+                case "2":
+                    estoqueRoupa.buscar(
+                        (item) => {
+                            return item.preco === parseInt(read.question("Preco: "))
+                        }
+                    );
+                    break;
+            }
+            break;
+        case "brinquedo":
+            console.log(`
+    ==> Opcoes
+    1-> Nome
+    2-> Idade Minima
+    3-> preco
+            `)
+            switch(read.question("Escolha uma opcao: ")) {
+                case "1":
+                    estoqueBrinquedo.buscar(
+                        (item) => {
+                            return item.nome === read.question("Tamanho: ")
+                        }
+                    );
+                    break;
+                case "2":
+                    estoqueBrinquedo.buscar(
+                        (item) => {
+                            return item.preco === parseInt(read.question("Preco: "))
+                        }
+                    );
+                    break;
+                case "3":
+                    estoqueBrinquedo.buscar(
+                        (item) => {
+                            return item.preco === parseInt(read.question("Preco: "))
+                        }
+                    );
+                    break;
+            }
+            break;
+        default:
+            return "Valor invalido.";
+    }
+
+    return "Produto deletado."
+}
+
 function pegaValorMax(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[], valorRef:number): (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletronico> | Estoque<Brinquedo>)[]{
     const estoquesFiltrar = estoques;
     estoquesFiltrar.forEach(elemento => {
@@ -142,19 +228,32 @@ function menuListagem(estoques: (Estoque<Livro> | Estoque<Roupa> | Estoque<Eletr
     ====> Opcoes
     [1] - Filtrar por valor
     [2] - Primeiro item
-    [3] - Voltar
+    [3] - Buscar
+    [4] - Voltar
         `);
         resposta = read.question("Escolha uma opcao: ");
 
         switch (resposta) {
             case "1":
-                filtrar(estoques)
+                filtrar(estoques);
                 break;
             case "2":
 
-                break
+                break;
+            case "3":
+                console.clear();
+                console.log(`
+    Opções:
+    -> Roupa
+    -> Eletronico
+    -> Livro
+    -> Brinquedo
+            `);
+                console.log(buscar(read.question("Opcao:")));
+                read.question("Enter para continuar... ");
+                break;
         }
-    } while (resposta != "3")
+    } while (resposta != "4")
 }
 
 do {
