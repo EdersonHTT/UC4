@@ -1,14 +1,14 @@
 export class Estoque {
-    produtos: string[] = ["pedra", "game"];
+    produtos: string[] = ["Arroz", "Feijão", "Macarrão", "Óleo", "Açúcar"];
 
-    adicionaProduto(item:string[]):void;
-    adicionaProduto(item:string):void;
+    remover(item:string):void;
+    remover(item:string[]):void;
 
-    adicionaProduto(item:any):void {
-        if(Array.isArray(item)) {
-            
+    remover(item:any):void {
+        if(Array.isArray(item)){
+            this.produtos
         } else {
-            
+
         }
     }
 }
