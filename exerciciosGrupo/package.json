@@ -12,6 +12,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "readline-sync": "^1.4.10",
+    "types": "file:../../../../../../readline-sync",
     "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/readline-sync": "^1.4.8"
   }
 }

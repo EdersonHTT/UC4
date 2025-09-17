@@ -1,6 +1,7 @@
 import { Calculadora } from "./Calculadora";
 import { Desenhista } from "./Desenhista";
 import { Mensageiro } from "./Mensageiro";
+import { Estoque } from "./exs/Estoque";
 import { Loja } from "./exs/Loja";
 
 const calc:Calculadora = new Calculadora();
@@ -29,3 +30,11 @@ const loja:Loja = new Loja()
 
 loja.adicionaProduto(["Game", "Pedra"]);
 loja.adicionaProduto("Pedregulho");
+
+const estoque:Estoque = new Estoque()
+
+console.log("Produtos: " + estoque.produtos.join(" | "))
+estoque.remover("Arroz")
+console.log("Produtos: " + estoque.produtos.join(" | "))
+estoque.remover(["Macarrão", "Oleo", "Açúcar"])
+console.log("Produtos: " + estoque.produtos.join(" | "))
