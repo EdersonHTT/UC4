@@ -1,4 +1,4 @@
-export interface Produto {
+export interface IProduto {
     nome:string,
     preco: number
 }

@@ -236,3 +236,141 @@ Classe **concreta**, herda de `Loja<T>`.
 - Herança
 - Polimorfismo
 - Encapsulamento
+
+
+---
+
+
+# 📂 Ex4 – Sistema de Pagamentos
+
+Crie um **sistema de pagamentos** com **Cartão, Pix e Boleto**.
+
+- Cada método deve se comportar de forma diferente.
+- Cartão deve suportar **sobrecarga** (parcelado ou à vista).
+
+
+
+## 📁 Estrutura do Projeto
+
+### IPagamento.ts
+Interface **IPagamento**.
+
+**Métodos:**
+- `pagar(valor: number): void`
+
+### Pagamento.ts
+Classe **abstrata**.
+
+**Atributos:**
+- `valor: number`
+
+**Métodos:**
+- `pagar(valor: number): void` (**abstract**)
+
+---
+
+### Cartao.ts
+Classe **concreta**, herda de `Pagamento`.
+
+**Sobrecarga:**
+- `pagar(valor: number)` → pagamento à vista
+- `pagar(valor: number, parcelas: number)` → pagamento parcelado
+
+---
+
+### Pix.ts
+Classe **concreta**, herda de `Pagamento`.
+
+- `pagar()` gera **código aleatório** para pagamento.
+
+---
+
+### Boleto.ts
+Classe **concreta**, herda de `Pagamento`.
+
+- `pagar()` simula **prazo de compensação** do boleto.
+
+---
+
+### main.ts
+- Testar os diferentes tipos de pagamento.
+
+---
+
+## 📌 Conceitos trabalhados
+- Interfaces
+- Classes abstratas
+- Polimorfismo
+- Sobrecarga de métodos
+
+---------
+
+# 📂 Ex5 – Simulador de Transporte de Cargas
+
+Crie um **sistema para transportar cargas** usando veículos variados (**Moto, Caminhão, Navio**).
+
+- Cada veículo possui **limite de peso**.
+- O sistema deve **impedir transporte acima da capacidade**.
+- Cada veículo deve **exibir mensagem personalizada** ao transportar.
+
+---
+
+## 📁 Estrutura do Projeto
+
+### Veiculo.ts
+Classe **abstrata**.
+
+**Atributos:**
+- `capacidade: number`
+
+**Métodos:**
+- `transportar<T>(carga: Carga<T>): void` (**abstract**)
+
+---
+
+### Caminhao.ts
+Classe **concreta**, herda de `Veiculo`.
+
+- Sobrescreve `transportar()`, verifica limite de carga.
+
+---
+
+### Moto.ts
+Classe **concreta**, herda de `Veiculo`.
+
+- Sobrescreve `transportar()`, verifica limite (≤ 30kg).
+
+---
+
+### Navio.ts
+Classe **concreta**, herda de `Veiculo`.
+
+- Sobrescreve `transportar()`, verifica limite (≤ 100000kg).
+
+---
+
+### Carga.ts
+Classe **genérica** `<T>`.
+
+**Atributos:**
+- `item: T`
+- `peso: number`
+
+**Métodos:**
+- `descricao(): string`
+
+---
+
+### main.ts
+- Criar instâncias de veículos.
+- Criar cargas de tipos diferentes.
+- Testar transporte, incluindo tentativas de exceder a capacidade.
+
+---
+
+## 📌 Conceitos trabalhados
+- Classes abstratas
+- Herança
+- Polimorfismo
+- Encapsulamento
+- Generics

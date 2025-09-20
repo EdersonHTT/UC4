@@ -1,13 +1,24 @@
-import { Produto } from "./IProduto"
+import { IProduto } from "./IProduto"
 
-export class Loja<T extends Produto> {
+export class Loja<T extends IProduto> {
     produtos: T[] = []
 
     listar(): T[]{
         return this.produtos;
     }
 
-    calcularTotal(): number{
+    adicionar(item:T):void {
+        this.produtos.push(item);
+    }
 
+    
+    calcularTotal(): number{
+        let total = 0;
+        
+        this.produtos.forEach(element => {
+            total += element.preco;
+        });
+
+        return total;
     }
 }

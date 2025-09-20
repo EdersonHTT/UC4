@@ -1,11 +1,12 @@
 import { Loja } from "./Loja";
-import { Produto } from "./IProduto";
+import { IProduto } from "./IProduto";
 
+interface ProdutoRoupa extends IProduto {
+    tamanho: number;
+}
 
-export class LojaDeRoupas<T extends Produto> extends Loja<T> {
-    override listar(): void {
-        this.produtos.forEach(p => {
-            console.log(`Camisa: ${p.nome} - R$: ${p.preco} - Tamanho: ${p.tamanho}`)
-        });
+export class LojaDeRoupas<T extends ProdutoRoupa = ProdutoRoupa> extends Loja<T> {
+    listar(): T[] {
+        return this.produtos
     }
 }
