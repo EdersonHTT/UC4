@@ -357,7 +357,7 @@ Classe **genérica** `<T>`.
 - `peso: number`
 
 **Métodos:**
-- `descricao(): string`
+- `descricao(): string`![Alt text](https://doki.assets.unthrottled.io/stickers/jetbrains/v2/reZero/beatrice/beatrice.png)
 
 ---
 
