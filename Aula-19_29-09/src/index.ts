@@ -90,5 +90,9 @@ console.log(mostraNome<Usuario>(meuUsuario))
 
 
 function som<T extends Animal>(obj:T):string {
-    return obj.
+    return obj.nome + "Faz som";
 }
+
+
+
+//som()
